@@ -1,13 +1,11 @@
-from sentence_transformers import SentenceTransformer
-from lecture_pdf import extraire_blocs_avec_positions
 import joblib
-import json
 
-embedding_model, svm_model = joblib.load("classif_cvvv.joblib")
-model = embedding_model
+
+embedding_model, svm_model = joblib.load("cv/classif_cvvv.joblib")
+
 
 def ajouter_embedding(bloc):
-    bloc["embedding"] = model.encode(bloc["texte"])
+    bloc["embedding"] = embedding_model.encode(bloc["texte"])
     return bloc
 
 def est_titre_bloc(bloc):
@@ -31,7 +29,7 @@ def est_titre_bloc(bloc):
         "bénévolat", "associatif", "projets", "certifications", "références", "Intérêts"]
     }
 
-    if len(mots) <= 4:
+    if len(mots) <= 4: #**a changer si le titre et le contenu sont dans la meme ligne
         for categorie, liste in mots_cles.items():
             if any(m in liste for m in mots):
                 bloc["categorie"] = categorie

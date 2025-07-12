@@ -1,0 +1,12 @@
+# Ignorer les dossiers d'environnement virtuel
+venv/
+score/venv/
+
+# Ignorer les fichiers Python compilés
+*.pyc
+
+# Ignorer dossiers __pycache__
+__pycache__/
+
+# Ignorer dossiers d'uploads (si tu ne veux pas versionner les fichiers uploadés)
+uploads/

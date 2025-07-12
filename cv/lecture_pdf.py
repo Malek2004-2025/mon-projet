@@ -19,9 +19,9 @@ def extraire_texte_pdf_scanné(fichier_pdf):
     texte = ""
     for page in doc:
         for img in page.get_images(full=True): # cherche les photos (images) sur chaque page.
-            xref = img[0]
-            base_image = doc.extract_image(xref)
-            image_bytes = base_image["image"] #Il extrait la photo en mémoire, sous forme de données (octets).
+            xref = img[0] #identifiant de l’image dans le PDF
+            base_image = doc.extract_image(xref) # extrait l’image complète (en binaire) à partir de son xref.
+            image_bytes = base_image["image"] #On ne garde que la partie qui nous intéresse : le contenu de l’image. car le resultat precedente est un dictionnaire ("image",....)
             texte += ocr_depuis_image(image_bytes) + "\n" #assemble tout le texte trouvé sur toutes les images du PDF
     return texte
 
@@ -42,7 +42,7 @@ def extraire_blocs_avec_positions(fichier_pdf):
             })
     return sorted(all_blocks, key=lambda b: (b['page'], b['y0']))  # du haut vers le bas(necessaire car l'ordinateur peut les lire dans n'importe quel ordre)(triés du haut vers le bas (y0 croissant).)
 
-def extraire_blocs_ocr_avec_positions(fichier_pdf):
+"""def extraire_blocs_ocr_avec_positions(fichier_pdf):
     doc = fitz.open(fichier_pdf)
     blocs = []
     for page_num, page in enumerate(doc, start=1):
@@ -68,3 +68,4 @@ def extraire_blocs_ocr_avec_positions(fichier_pdf):
                         "texte": text
                     })
     return sorted(blocs, key=lambda b: (b['page'], b['y0'], b['x0']))
+"""
