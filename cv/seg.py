@@ -1,7 +1,8 @@
 import joblib
+import re #la bibliothèque standard pour travailler avec les expressions régulières (regex)
 
 
-embedding_model, svm_model = joblib.load("cv/classif_cvvv.joblib")
+embedding_model, svm_model = joblib.load("classif_cvvv.joblib")
 
 
 def ajouter_embedding(bloc):
@@ -15,23 +16,31 @@ def est_titre_bloc(bloc):
         "Expérience":["expérience", "expériences", "expérience professionnelle", "expérience pro", 
         "parcours professionnel", "stages", "stage", "emplois", "emploi", 
         "vie professionnelle", "carrière", "expériences professionnelles"],
-        "Formation":["formation", "formations", "éducation", "études", "parcours académique", 
-        "scolarité", "diplômes", "diplôme", "université", "école", "bac", "baccalauréat"],
+        
+        "Formation":["formation", "formations", "éducation", "education", "études", "parcours académique",
+        "scolarité", "diplômes", "diplôme", "université", "école", "school", "college",
+        "baccalauréat", "bachelor", "engineer", "Master", "Licence"
+        ],
+        
         "Compétences techniques":["compétences", "compétence", "compétences techniques", "technologies", 
-        "outils", "outils informatiques", "informatique", "langages", "langages informatiques"],
+        "outils", "outils informatiques", "informatique", "langages", "langages informatiques", "certifications"],
+        
         "Langues":["langues", "langue", "compétences linguistiques", "langues parlées", 
         "niveau linguistique"],
+        
         "Soft Skills":["soft skills", "compétences personnelles", "savoir-être", "qualités", 
         "aptitudes", "compétences relationnelles", "compétences comportementales"],
+        
         "Informations personnelles":["contact", "coordonnées", "informations personnelles", "informations de contact", 
         "adresse", "email", "e-mail", "numéro", "téléphone", "linkedin", "profil"],
+        
         "Autres":["autres", "divers", "centres d’intérêt", "hobbies", "loisirs", 
-        "bénévolat", "associatif", "projets", "certifications", "références", "Intérêts"]
+        "bénévolat", "associatif", "projets",  "références", "Intérêts"]
     }
 
     if len(mots) <= 4: #**a changer si le titre et le contenu sont dans la meme ligne
         for categorie, liste in mots_cles.items():
-            if any(m in liste for m in mots):
+            if any(m in (mot.lower() for mot in liste) for m in mots):
                 bloc["categorie"] = categorie
                 return True
     
@@ -52,8 +61,24 @@ def filtre_blocs(blocs):
             blocs_contenu.append(bloc)
     return blocs_titres, blocs_contenu
 
+def decouper_blocs_multilignes(bloc):
+    lignes = bloc["texte"].split("\n")
+    nouveaux_blocs = []
+    for ligne in lignes :
+        texte_ligne = ligne.strip()
+        if texte_ligne:
+            # Copier la position et page pour garder la structure
+            nouveaux_blocs.append({
+                "texte": texte_ligne,
+                "y0": bloc.get("y0", 0),
+                "y1": bloc.get("y1", 0),
+                "page": bloc.get("page", 0)
+            })
+    return  nouveaux_blocs
+
+
 #associe à chaque bloc de contenu la catégorie du titre le plus proche verticalement au-dessus de lui (sur la même page),
-def propager_categorie_dpuis_titres(blocs_titres, blocs_contenu, distance_seuil=100):
+def propager_categorie_dpuis_titres(blocs_titres, blocs_contenu, distance_seuil=50): #à ajuster
     for bloc_c in blocs_contenu:
         y_c_h = bloc_c["y0"]
         page_c = bloc_c.get("page", 0)
