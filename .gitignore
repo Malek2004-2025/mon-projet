@@ -10,3 +10,6 @@ __pycache__/
 
 # Ignorer dossiers d'uploads (si tu ne veux pas versionner les fichiers uploadés)
 uploads/
+
+# ignorer les fichiers de ML
+*.joblib
