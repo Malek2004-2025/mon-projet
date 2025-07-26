@@ -327,4 +327,46 @@ Il prend en compte plusieurs catégories : **compétences techniques**, **soft s
   "manquants": ["aws", "kubernetes"]
 }
 
+# (score) main.py
+
+## Description
+Ce script permet de générer un rapport de compatibilité entre un CV et une offre d’emploi.  
+Il utilise des fonctions d’extraction et de comparaison pour analyser les données JSON et calculer un score global.
+
+---
+
+## Fonctions principales
+
+### 1. `generer_rapport(cv_json, offre_json)`
+- **But :** Générer un rapport détaillé comparant un CV et une offre.
+- **Entrées :**  
+  - `cv_json` : dictionnaire contenant les données du CV.  
+  - `offre_json` : dictionnaire contenant les données de l’offre.
+- **Processus :**  
+  - Extraction des listes clés du CV (écoles, compétences, formations, soft skills).  
+  - Extraction des compétences demandées dans l’offre.  
+  - Ajout des compétences de l’offre à la structure CV.  
+  - Comparaison entre CV et offre.  
+  - Calcul du score global.  
+  - Retour d’un rapport structuré.
+- **Sortie :**  
+  - Dictionnaire contenant `score_global` (score total) et `details` (scores détaillés).
+
+---
+
+## Librairies et modules utilisés
+- `extraiire` : extraction des listes depuis les fichiers JSON.  
+- `compare` : comparaison et calcul des scores.  
+- `pprint` : affichage lisible des résultats.
+
+---
+
+## Utilisation
+
+1. Placer les fichiers `cv.json` et `offre.json` dans le même dossier que `main.py`.  
+2. Exécuter le script :
+
+```bash
+python main.py
+
 
