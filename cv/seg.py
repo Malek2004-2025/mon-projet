@@ -2,7 +2,7 @@ import joblib
 import re #la bibliothèque standard pour travailler avec les expressions régulières (regex)
 
 
-embedding_model, svm_model = joblib.load("classif_cvvv.joblib")
+embedding_model, svm_model = joblib.load("classif_cv.joblib")
 
 
 def ajouter_embedding(bloc):
@@ -126,10 +126,12 @@ def construire_json_structuré(blocs):
         "a propos de moi": "Soft Skills"
     }
     for bloc in blocs:
-        cat = bloc.get("categorie", "Autres")
         texte = bloc.get("texte", "").strip()
+        if est_titre_bloc(bloc):  # Ignorer les titres
+            continue
+        cat = bloc.get("categorie", "Autres")
         # Convertir vers un nom propre
-        nom_final = mapping.get(cat, cat)
+        nom_final = mapping.get(cat, cat) #Donne-moi la version propre de cat si elle est dans mapping, sinon garde cat tel quel 
         json_result[nom_final].append(texte)
 
     return json_result

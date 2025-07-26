@@ -1,0 +1,9 @@
+flask                # Framework web pour l'API (app.py)
+werkzeug             # Utilitaire WSGI, utilisé par Flask
+PyMuPDF              # Lecture et extraction des blocs des fichiers PDF (lecture_pdf.py)
+pytesseract          # OCR pour lire le texte des images (lecture_pdf.py)
+Pillow               # Manipulation d'images pour l'OCR (lecture_pdf.py)
+joblib               # Chargement des modèles entraînés (embedding et SVM) (seg.py)
+scikit-learn         # Algorithmes de ML, utilisé pour le SVM (seg.py)
+sentence-transformers # Génération d'embeddings pour la similarité sémantique (seg.py)
+numpy                # Calculs numériques utilisés par ML et embeddings

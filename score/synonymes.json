@@ -1,0 +1,107 @@
+ {
+  
+    "programmation orientée objet": ["poo", "oop", "programmation objet", "object oriented programming"],
+    "javascript": ["js", "java script", "javascipt", "javasript", "ecmascript", "es6", "nodejs", "node.js", "node"],
+    "typescript": ["ts", "type script"],
+    "python": ["py", "phyton", "pyhton"],
+    "java": ["jvm", "j2ee", "java se", "java ee", "jdk", "jre"],
+    "c++": ["c plus plus", "cpp", "cxx"],
+    "c#": ["csharp", "c sharp"],
+    "go": ["golang"],
+    "ruby": ["ruby on rails", "ror", "rails"],
+    "php": ["php7", "php8"],
+    "swift": ["ios development", "objective-c", "objc"],
+    "kotlin": ["android kotlin"],
+    "shell": ["bash", "sh", "shell scripting", "shell script"],
+    "html": ["html5"],
+    "css": ["css3", "scss", "sass", "less"],
+    "sql": ["structured query language"],
+    
+ 
+    "bases de données relationnelles": ["bdd", "database", "db", "mysql", "postgresql", "postgres", "oracle", "sql server", "mariadb", "sqlite"],
+    "bases de données non relationnelles": ["nosql", "mongodb", "cassandra", "redis", "firebase", "dynamodb", "couchdb", "elastic search"],
+    
+    
+    "react": ["reactjs", "react.js", "react native", "rn"],
+    "vue": ["vuejs", "vue.js"],
+    "angular": ["angularjs", "angular.js", "ng"],
+    "svelte": ["sveltejs"],
+    "next.js": ["nextjs"],
+    "nuxt.js": ["nuxtjs"],
+    
+    
+    "node.js": ["nodejs", "node", "node js"],
+    "express": ["expressjs", "express js"],
+    "django": ["django framework"],
+    "flask": ["flask microframework"],
+    "spring boot": ["springboot", "spring"],
+    "symfony": ["symfony framework"],
+    "laravel": ["laravel php"],
+    "fastapi": ["fast api", "fastapi framework"],
+    ".net": ["dotnet", ".net core", "dot net", "asp.net", "aspnet"],
+    
+ 
+    "docker": ["docker container", "containers"],
+    "kubernetes": ["k8s", "kubernete", "kube"],
+    "jenkins": ["jenkins ci", "jenkins pipeline"],
+    "gitlab ci": ["gitlab ci/cd"],
+    "ci/cd": ["intégration continue", "déploiement continu"],
+    "ansible": ["ansible automation"],
+    "terraform": ["terraform infrastructure"],
+    
+   
+    "amazon web services": ["aws", "amazon cloud"],
+    "google cloud platform": ["gcp", "google cloud"],
+    "microsoft azure": ["azure", "ms azure"],
+    "cloud computing": ["informatique en nuage", "cloud"],
+    
+
+    "intelligence artificielle": ["ia", "ai", "artificial intelligence"],
+    "machine learning": ["ml", "apprentissage automatique"],
+    "deep learning": ["dl", "apprentissage profond"],
+    "traitement du langage naturel": ["nlp", "natural language processing"],
+    "reinforcement learning": ["rl", "apprentissage par renforcement"],
+    "convolutional neural network": ["cnn"],
+    "recurrent neural network": ["rnn"],
+    "artificial neural network": ["ann"],
+    "support vector machine": ["svm"],
+    "k-nearest neighbors": ["knn"],
+    "xgboost": ["extreme gradient boosting"],
+    "tensorflow": ["tenserflow", "tensor flow"],
+    "pytorch": ["py torch"],
+    
+   
+    "méthodologie agile": ["agile", "scrum", "kanban", "lean", "devops"],
+    "scrum": ["scrum master", "scrum methodology"],
+    "kanban": ["kanban board"],
+    "devops": ["dev ops"],
+    
+    
+    "cybersécurité": ["infosec", "cyber security", "sécurité informatique", "pentest", "test d’intrusion", "owasp", "ssl", "tls", "firewall"],
+    "analyse de vulnérabilité": ["vulnerability assessment", "va"],
+    "gestion des incidents": ["incident management"],
+    
+  
+    "git": ["git versioning", "gitlab", "github", "bitbucket"],
+    "visual studio code": ["vscode", "vs code"],
+    "postman": ["post man"],
+    "jira": ["jira software"],
+    "trello": ["trello board"],
+    "figma": ["figma design"],
+    "swagger": ["swagger ui", "openapi"],
+    
+    
+    "api rest": ["rest", "restful api", "rest api"],
+    "microservices": ["micro services", "microservice architecture"],
+    "test driven development": ["tdd"],
+    "behavior driven development": ["bdd"],
+    "intégration continue": ["ci"],
+    "déploiement continu": ["cd"],
+    
+   
+    "javascipt": ["javascript", "javasript", "javscript"],
+    "phyton": ["python", "pyhton"],
+    "kubernete": ["kubernetes", "k8s"],
+    "mongo db": ["mongodb", "mongo"],
+    "git hub": ["github"]
+}

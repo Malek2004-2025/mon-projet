@@ -1,5 +1,5 @@
-from cv.lecture_pdf import est_pdf_scanné, extraire_texte_pdf_scanné, extraire_blocs_avec_positions
-from cv.seg import ajouter_embedding, filtre_blocs, propager_categorie_dpuis_titres, classifier_blocs_sans_categorie, construire_json_structuré
+from lecture_pdf import est_pdf_scanné, extraire_texte_pdf_scanné, extraire_blocs_avec_positions
+from seg import ajouter_embedding, filtre_blocs, propager_categorie_dpuis_titres, classifier_blocs_sans_categorie, construire_json_structuré, decouper_blocs_multilignes
 import json
 
 
@@ -11,11 +11,18 @@ def pipeline_cv_ats(fichier_pdf):
     else:
         print("PDF textuel détecté.")
         blocs = extraire_blocs_avec_positions(fichier_pdf)
-        blocs = [ajouter_embedding(bloc) for bloc in blocs]
-        blocs_titres, blocs_contenu = filtre_blocs(blocs)
+
+        # Découper les blocs multilignes en blocs lignes simples
+        blocs_sep = []
+        for bloc in blocs:
+            blocs_sep.extend(decouper_blocs_multilignes(bloc))
+        
+
+        blocs = [ajouter_embedding(bloc) for bloc in  blocs_sep]
+        blocs_titres, blocs_contenu = filtre_blocs(blocs_sep)
 
         # Propagation avant classification pour ne pas écraser catégories détectées par titres
-        blocs_contenu = propager_categorie_dpuis_titres(blocs_titres, blocs_contenu, distance_seuil=100)
+        blocs_contenu = propager_categorie_dpuis_titres(blocs_titres, blocs_contenu, distance_seuil=50)
 
         # Ajouter classification SVM pour les blocs sans catégorie
         blocs_contenu = classifier_blocs_sans_categorie(blocs_contenu)
@@ -42,7 +49,7 @@ def generer_json(fichier_json,json_structuré):
 
 
 if __name__ == "__main__":
-    json_structuré = pipeline_cv_ats("exemples/mcv.pdf")
+    json_structuré = pipeline_cv_ats("../exemples/martin.pdf")
     generer_json("cv.json",json_structuré)
     
         
