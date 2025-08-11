@@ -2,7 +2,7 @@ import joblib
 import re #la bibliothèque standard pour travailler avec les expressions régulières (regex)
 
 
-embedding_model, svm_model = joblib.load("classif_cv.joblib")
+embedding_model, svm_model = joblib.load("cv/classif_cv.joblib")
 
 
 def ajouter_embedding(bloc):

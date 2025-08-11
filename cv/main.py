@@ -1,5 +1,5 @@
-from lecture_pdf import est_pdf_scanné, extraire_texte_pdf_scanné, extraire_blocs_avec_positions
-from seg import ajouter_embedding, filtre_blocs, propager_categorie_dpuis_titres, classifier_blocs_sans_categorie, construire_json_structuré, decouper_blocs_multilignes
+from .lecture_pdf import est_pdf_scanné, extraire_texte_pdf_scanné, extraire_blocs_avec_positions
+from .seg import ajouter_embedding, filtre_blocs, propager_categorie_dpuis_titres, classifier_blocs_sans_categorie, construire_json_structuré, decouper_blocs_multilignes
 import json
 
 
