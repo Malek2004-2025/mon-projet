@@ -26,40 +26,55 @@ def normaliser(liste, dic):
             resultat.append(mot_norm)
     return resultat
 
-def compare_listes(liste_cv, liste_offre, mode="strict", seuil_fuzzy=80):
-    # Normalisation via synonymes
+def calcul_bonus_frequence(freq, bonus_par_occurrence=2):
+    if freq > 1:
+        return (freq -1) * bonus_par_occurrence
+    else:
+        return 0
+
+def compare_listes(liste_cv, liste_offre, seuil_fuzzy=80):
     liste_cv_norm = normaliser(liste_cv, synonymes)
     liste_offre_norm = normaliser(liste_offre, synonymes)
 
+    compteur = Counter(liste_cv_norm)
+
     matches, manquants = [], []
+    frequences_utiles = {}  
+
+    score_brut = 0
+    score_max = len(liste_offre_norm)*100
 
     for exigence, orig in zip(liste_offre_norm, liste_offre):
         trouve = False
         for valeur_cv in liste_cv_norm:
-            if mode == "strict" and exigence == valeur_cv:
+            if fuzz.partial_ratio(exigence, valeur_cv) >= seuil_fuzzy:
                 trouve = True
                 break
-            elif mode == "fuzzy":
-                if fuzz.partial_ratio(exigence, valeur_cv) >= seuil_fuzzy:
-                    trouve = True
-                    originale = orig
-                    break
         if trouve:
             matches.append(orig)
+            freq = compteur[exigence]
+            frequences_utiles[orig] = freq
+            bonus = calcul_bonus_frequence(freq, bonus_par_occurrence=2)
+            score_brut += 100 + bonus
         else:
             manquants.append(orig)
 
     score = (len(matches) / len(liste_offre_norm)) * 100 if liste_offre_norm else 0
-    return {
-        "score": round(score, 1),
-        "matches": matches,
-        "manquants": manquants
-    }
-                
 
-def comparer_cv_et_offre(cv_std, offre_std) : #standardisé
+    score_avec_bonus = (score_brut / score_max) * 100 if score_max else 0
+
+    return {
+    "score_sans_bonus": round(score, 1),
+    "score_avec_bonus": round(score_avec_bonus, 1),
+    "matches": matches,
+    "manquants": manquants,
+    "frequences_supp": frequences_utiles
+    }
+
+
+def comparer_cv_et_offre(cv_std, offre_std):
     modes = {
-        "competences": ("fuzzy", 80), #mode + seuil
+        "competences": ("fuzzy", 80),
         "soft_skills": ("fuzzy", 80),
         "formations": ("fuzzy", 70),
         "ecoles": ("fuzzy", 85)
@@ -67,75 +82,49 @@ def comparer_cv_et_offre(cv_std, offre_std) : #standardisé
     resultats = {}
 
     for categorie in ["competences", "soft_skills", "formations", "ecoles"]:
-        #On récupère les listes de mots dans le CV et l’offre pour chaque catégorie
         valeurs_cv = cv_std.get(categorie, [])
         valeurs_offre = offre_std.get(categorie, [])
-        mode, seuil =modes[categorie] #On récupère le mode (strict ou fuzzy) et le seuil à appliquer
+        _, seuil = modes[categorie]
         resultat = compare_listes(
             liste_cv=valeurs_cv,
             liste_offre=valeurs_offre,
-            mode=mode,
             seuil_fuzzy=seuil
         )
-        
-        resultat_final = resultat.copy()
-
-        resultats[categorie] = resultat_final
-    return {
-        "scores": resultats
-    }
-
-def calculer_bonus_frequence(valeurs_cv, liste_offre, score_categorie):
-    # Étape 1 : normalisation des deux listes
-    valeurs_cv_norm = normaliser(valeurs_cv, synonymes)
-    liste_offre_norm = normaliser(liste_offre, synonymes)
-
-    # Étape 2 : compteur de la fréquence des compétences normalisées du CV
-    compteur = Counter(valeurs_cv_norm)
-
-    # Étape 3 : calcul des répétitions pour chaque compétence présente à la fois dans le CV et l’offre
-    total_repetitions = 0
-    for exigence in liste_offre_norm:
-        freq = compteur.get(exigence, 0)
-        if freq > 1:
-            total_repetitions += (freq - 1)  # on ignore la première apparition
-
-    # Étape 4 : calcul du bonus
-    bonus_brut = total_repetitions * 0.5
-    bonus_max = 0.2 * score_categorie
-    bonus = min(bonus_brut, bonus_max)
-
-    # Étape 5 : retourner aussi les fréquences utiles uniquement
-    frequences_utiles = {exig : compteur[exig] for exig in liste_offre_norm if compteur[exig] > 0}
-
-    return round(bonus, 2), frequences_utiles
+        resultats[categorie] = resultat
+    return {"scores": resultats}
 
 
-def calcul_score_global(resultats_par_categorie, poids_personnalise=None, valeurs_cv=None):
+def calcul_score_global(resultats_par_categorie, poids_personnalise=None, valeurs_cv=None, valeurs_offre=None):
     poids = poids_personnalise or {
        "competences": 0.5,
-        "soft_skills": 0.2,
-        "formations": 0.2,
-        "ecoles": 0.1
+       "soft_skills": 0.2,
+       "formations": 0.2,
+       "ecoles": 0.1
     }
-    total = 0.0
+    score_original = 0.0
+    score_finale = 0.0
+    
     for cat, infos in resultats_par_categorie.items():
-        score_cat = infos.get("score", 0)
+        score_sans_bonus = infos.get("score_sans_bonus", 0)
+        score_avec_bonus = infos.get("score_avec_bonus", score_sans_bonus)
         poids_cat = poids.get(cat, 0)
-        total += score_cat * poids_cat
 
-    # Bonus uniquement pour compétences techniques
-    if valeurs_cv is not None:
-        scores = resultats_par_categorie.get("competences", {})
-        score_comp = scores.get("score", 0)
+        score_original += poids_cat * score_sans_bonus
+        score_finale += poids_cat * score_avec_bonus
 
-        liste_cv = valeurs_cv.get("competences", [])
-        liste_offre = valeurs_cv.get("offre_competences", [])
+       
 
-        bonus, frequences = calculer_bonus_frequence(liste_cv, liste_offre, score_comp)
-        total += bonus
-        resultats_par_categorie["competences"]["frequences"] = frequences
+    return {
+        "score_original": round(score_original, 2),
+        "score_finale": round(score_finale, 2)
+    }
+
+    
 
 
-    return round(total, 1)
 
+def calculer_frequences_utiles(valeurs_cv, liste_offre):
+    valeurs_cv_norm = normaliser(valeurs_cv, synonymes)
+    liste_offre_norm = normaliser(liste_offre, synonymes)
+    compteur = Counter(valeurs_cv_norm)
+    return {exig: compteur[exig] for exig in liste_offre_norm if compteur[exig] > 0}
